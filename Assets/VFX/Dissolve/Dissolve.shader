@@ -2,104 +2,75 @@ Shader "Unlit/Dissolve"
 {
   Properties
   {
-    _MainTex ("Texture", 2D) = "white" {}
-    [HDR] _MainColor ("Color", Color) = (0,0,0)
+    [MainColor] [HDR] _MainColor ("Main Color", Color) = (1,1,1,1)
+    [MainTexture] _MainTex ("Main Texture", 2D) = "white" {}
+
+    [HDR] _Dissolve ("Dissolve", Range(0,1)) = 0
+
+    [HDR] _EdgeColor ("Main Color", Color) = (1,1,1,1)
+    _EdgeWidth ("Edge Width", Range(0,0.1)) = 0
   }
+
+  // Universal Render Pipeline subshader. If URP is installed this will be used.
   SubShader
   {
-    Tags { "RenderType"="Opaque" }
-    LOD 100
+    Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalRenderPipeline"}
 
     Pass
     {
-      CGPROGRAM
+      Tags { "LightMode"="UniversalForward" }
+
+      HLSLPROGRAM
       #pragma vertex vert
       #pragma fragment frag
-      // make fog work
-      #pragma multi_compile_fog
+      
+      #include "./Unity_SimpleNoise_float.hlsl" 
+      #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-      #include "UnityCG.cginc"
-
-      struct appdata
+      struct Attributes
       {
-        float4 vertex : POSITION;
-        float2 uv : TEXCOORD0;
+        float4 positionOS   : POSITION;
+        float2 uv           : TEXCOORD0;
       };
 
-      struct v2f
+      struct Varyings
       {
-        float2 uv : TEXCOORD0;
-        UNITY_FOG_COORDS(1)
-        float4 vertex : SV_POSITION;
+        float2 uv           : TEXCOORD0;
+        float4 positionHCS  : SV_POSITION;
       };
 
-      sampler2D _MainTex;
-      float4 _MainTex_ST;
-      float4 _MainColor;
 
-      v2f vert (appdata v)
+      TEXTURE2D(_MainTex);
+      SAMPLER(sampler_MainTex);
+      
+      CBUFFER_START(UnityPerMaterial)
+        float4 _MainTex_ST;
+        half4 _MainColor,_EdgeColor;
+        float _Dissolve, _EdgeWidth;
+      CBUFFER_END
+
+      Varyings vert(Attributes IN)
       {
-        v2f o;
-        o.vertex = UnityObjectToClipPos(v.vertex);
-        o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-        UNITY_TRANSFER_FOG(o,o.vertex);
-        return o;
+        Varyings OUT;
+        OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+        OUT.uv = TRANSFORM_TEX(IN.uv, _MainTex);
+        return OUT;
       }
 
-      fixed4 frag (v2f i) : SV_Target
+      half4 frag(Varyings IN) : SV_Target
       {
-        // sample the texture
-        fixed4 col = tex2D(_MainTex, i.uv);
-        col *=_MainColor;
-        // apply fog
-        UNITY_APPLY_FOG(i.fogCoord, col);
-        return col;
+        float Noise;//噪声
+        half4 color;//颜色
+        Noise = Unity_SimpleNoise_float(IN.uv, 50);
+        color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv);
+
+        clip(color*Noise - _Dissolve);
+        half4 edgeColor = lerp(_EdgeColor, _Dissolve, color*Noise - _Dissolve);
+        color *= lerp(color,edgeColor,_Dissolve);
+        return color;
       }
-      ENDCG
+      ENDHLSL
     }
-    // pass
-    // {
-      //   CGPROGRAM
-      //   #pragma vertex vert
-      //   #pragma fragment frag
-      //   #pragma multi_compile_fog
-      //   #include "UnityCG.cginc"
-
-      //   struct appdata
-      //   {
-        //     float4 vertex : POSITION;
-        //     float2 uv : TEXCOORD0;
-        //     float normal: NORMAL;
-      //   };
-
-      //   struct v2f
-      //   {
-        //     float2 uv : TEXCOORD0;
-        //     UNITY_FOG_COORDS(1)
-        //     float4 vertex : SV_POSITION;
-      //   };
-
-      //   sampler2D _MainTex;
-      //   float4 _MainTex_ST;
-      //   float4 _MainColor; 
-
-      //   v2f vert (appdata v)
-      //   {
-        //     v2f o;
-        //     // o.vertex.xyz += v.normal *0.1;
-        //     o.vertex = UnityObjectToClipPos(v.vertex);
-        //     o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-        //     UNITY_TRANSFER_FOG(o,o.vertex);
-        //     return o;
-      //   }
-
-      //   fixed4 frag (v2f i) : SV_Target
-      //   {
-        //     fixed4  color = _MainColor;
-
-        //     return _MainColor;
-      //   }
-      //   ENDCG
-    // }
   }
+
 }

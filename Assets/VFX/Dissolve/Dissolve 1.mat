@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dissolve
-  m_Shader: {fileID: -6465566751694194690, guid: c1f279705f1d8264dac277631621263c, type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON
+  m_Name: Dissolve 1
+  m_Shader: {fileID: 4800000, guid: 7e9b75e0c1f3b754f911f294136485ac, type: 3}
+  m_ShaderKeywords: _ALPHATEST_ON _DETAIL_SCALED _EMISSION
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -56,10 +56,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Noise_Map:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -91,7 +87,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 1
-    - _Alpha_Clip: 0.541
+    - _Alpha_Clip: 0
     - _AplhaClip: 0.495
     - _BOOLEAN: 0
     - _Blend: 0
@@ -101,7 +97,6 @@ Material:
     - _CameraFadingEnabled: 0
     - _CameraFarFadeDistance: 2
     - _CameraNearFadeDistance: 1
-    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _ColorMode: 0
@@ -109,24 +104,23 @@ Material:
     - _Cutoff: 0
     - _DetailAlbedoMapScale: 0
     - _DetailNormalMapScale: 0
-    - _Dissolve: 0
+    - _Dissolve: 0.398
     - _DistortionBlend: 0.5
     - _DistortionEnabled: 0
     - _DistortionStrength: 1
     - _DistortionStrengthScaled: 0
     - _DstBlend: 0
     - _ENUM: 0
-    - _EdgeWidth: 0.1
-    - _Edge_Width: 0.01
+    - _EdgeWidth: 0.01
     - _EmissionEnabled: 0
     - _EnvironmentReflections: 1
     - _FlipbookMode: 0
     - _Float: 0
     - _GlossMapScale: 0
-    - _Glossiness: 1
+    - _Glossiness: 0.243
     - _GlossyReflections: 0
     - _LightingEnabled: 0
-    - _Metallic: 1
+    - _Metallic: 0.624
     - _Mode: 0
     - _NoiseScale: 50
     - _OcclusionStrength: 1
@@ -143,20 +137,16 @@ Material:
     - _SrcBlend: 1
     - _Surface: 0
     - _WorkflowMode: 1
-    - _ZTest: 4
     - _ZWrite: 1
-    - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 0.55219746, g: 0.9811321, b: 0.16197933, a: 1}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
     - _ClipColor: {r: 37.688725, g: 4.088872, b: 29.346695, a: 0}
-    - _Color: {r: 0.55219746, g: 0.9811321, b: 0.16197933, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
-    - _EdgeColor: {r: 2.9960785, g: 0.09411765, b: 0, a: 0}
-    - _Edge_Color: {r: 37.688736, g: 4.143788, b: 9.668838, a: 0}
+    - _EdgeColor: {r: 37.688736, g: 4.143788, b: 9.668838, a: 0}
     - _EmissionColor: {r: 0.3372549, g: 0.63529414, b: 1.3254902, a: 1}
-    - _MainColor: {r: 0.25302857, g: 1.6255168, b: 0.7804947, a: 1}
-    - _Main_Color: {r: 0.25531676, g: 1.6255168, b: 0.78297144, a: 1}
+    - _MainColor: {r: 0.25531676, g: 1.6255168, b: 0.78297144, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
